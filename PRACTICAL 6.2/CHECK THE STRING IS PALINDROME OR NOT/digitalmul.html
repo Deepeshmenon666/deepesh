@@ -1,0 +1,20 @@
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class SimpleCommunication {
+    public static void main(String[] args) {
+        try {
+            URL url = new URL("https://example.com"); // secure website
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            int responseCode = conn.getResponseCode();
+
+            System.out.println("Connected to: " + url);
+            System.out.println("Response Code: " + responseCode);
+
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+

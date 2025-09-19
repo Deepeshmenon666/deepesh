@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Multimeter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      margin-top: 30px;
+    }
+
+    .meter {
+      width: 280px;
+      margin: auto;
+      border: 1px solid #222;
+      border-radius: 15px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .display {
+      background: #000;
+      color: #00FF00;
+      font-size: 24px;
+      padding: 15px;
+      margin: 15px auto 25px auto;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .unit-label {
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .dial-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 20px auto;
+    }
+
+    .dial {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(#ccc, #888);
+      border: 4px solid #333;
+      position: relative;
+      transition: transform 0.4s ease;
+      box-shadow: inset -4px -4px 10px rgba(255, 255, 255, 0.2),
+                  inset 4px 4px 10px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+
+    .knob {
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .labels {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .label {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+      font-weight: bold;
+      transform-origin: 50% 75px;
+    }
+
+    .label:nth-child(1) {
+      transform: rotate(0deg) translateY(-65px);
+    }
+
+    .label:nth-child(2) {
+      transform: rotate(120deg) translateY(-65px);
+    }
+
+    .label:nth-child(3) {
+      transform: rotate(240deg) translateY(-65px);
+    }
+
+    input {
+      margin: 10px auto;
+      padding: 6px;
+      font-size: 16px;
+      width: 120px;
+      text-align: center;
+      display: none;
+    }
+
+    button {
+      padding: 6px 12px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Digital Multimeter</h2>
+
+  <div class="meter">
+    <div class="display" id="disp">0.00 V</div>
+
+    <div class="unit-label" id="unitLabel">Mode: V</div>
+
+    <div class="dial-container">
+      <div class="dial" id="dial" onclick="rotateDial()">
+        <div class="knob"></div>
+        <div class="labels">
+          <div class="label">V</div>
+          <div class="label">A</div>
+          <div class="label">Ω</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separate input fields -->
+    <input type="number" id="inputV" placeholder="Enter Voltage (V)">
+    <input type="number" id="inputA" placeholder="Enter Current (A)">
+    <input type="number" id="inputO" placeholder="Enter Resistance (Ω)">
+
+    <button onclick="updateDisplay()">Show Value</button>
+  </div>
+
+  <script>
+    const units = ['V', 'A', 'Ω'];
+    let currentIndex = 0;
+    let angle = 0;
+
+    function rotateDial() {
+      currentIndex = (currentIndex + 1) % units.length;
+      angle = currentIndex * 120;
+      document.getElementById("dial").style.transform = rotate(${angle}deg);
+      document.getElementById("unitLabel").innerText = "Mode: " + units[currentIndex];
+      showCorrectInput();
+      updateDisplay();
+    }
+
+    function showCorrectInput() {
+      // Hide all inputs
+      document.getElementById("inputV").style.display = "none";
+      document.getElementById("inputA").style.display = "none";
+      document.getElementById("inputO").style.display = "none";
+
+      // Show only the relevant one
+      if (units[currentIndex] === 'V') {
+        document.getElementById("inputV").style.display = "block";
+      } else if (units[currentIndex] === 'A') {
+        document.getElementById("inputA").style.display = "block";
+      } else if (units[currentIndex] === 'Ω') {
+        document.getElementById("inputO").style.display = "block";
+      }
+    }
+
+    function updateDisplay() {
+      let val = 0;
+      let unit = units[currentIndex];
+
+      if (unit === 'V') {
+        val = parseFloat(document.getElementById("inputV").value);
+      } else if (unit === 'A') {
+        val = parseFloat(document.getElementById("inputA").value);
+      } else if (unit === 'Ω') {
+        val = parseFloat(document.getElementById("inputO").value);
+      }
+
+      document.getElementById("disp").innerText = isNaN(val) ? 0.00 ${unit} : ${val.toFixed(2)} ${unit};
+    }
+
+    // Show the correct input on initial load
+    showCorrectInput();
+  </script>
+</body>
+</html>
